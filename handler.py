@@ -4,6 +4,21 @@
 import config, re, pycurl, base64
 from io import BytesIO
 
+_context = None
+
+def context(val=None):
+    global _context
+    if val: _context = val
+    return _context
+
+def hourly_task():
+    if not context(): return
+    admin = context().friends.search(config.admin)[0]
+    import datetime
+    hr = datetime.datetime.now().hour
+    if hr in [6, 12, 18]:
+        admin.send(aqi())
+
 def aqi(city='shanghai'):
     url = 'http://api.waqi.info/feed/%s/?token=%s' % (city, config.aqitoken)
     import json
@@ -116,6 +131,9 @@ def auto_reply_handler(msg):
         elif t.startswith('~send'): 
             fn = '/tmp/' + t.split(' ')[1]
             msg.reply_file(fn)
+        elif t.startswith('~friend'):
+            cond = t.split(' ')[1]
+            msg.reply(str(context().friends().search(cond)))
         
 if __name__ == '__main__':
     class FakeMessage:
