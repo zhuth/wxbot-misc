@@ -13,7 +13,7 @@ def context(val=None):
 
 def hourly_task():
     if not context(): return
-    admin = context().friends.search(config.admin)[0]
+    admin = context().friends().search(config.admin)[0]
     import datetime
     hr = datetime.datetime.now().hour
     if hr in [6, 12, 18]:

@@ -42,7 +42,7 @@ if __name__ == '__main__':
                 importlib.reload(handler)
                 handler.context(bot)
                 print('* handler reloaded')
-            handler_import = time.time() - 30
+            handler_import = time.time()
         
         return handler.auto_reply_handler(msg)
     
